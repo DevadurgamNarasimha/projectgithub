@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arithmetic Operations</title>
+</head>
+<body>
+    <h1>Arithmetic Operations with Callbacks</h1>
+    <script>
+        function calculate(num1, num2) {
+            function operation(num1, num2, callback) {
+                return callback(num1, num2);
+            }
+            const add = (a, b) => a + b;
+            const multiply = (a, b) => a * b;
+            const additionResult = operation(num1, num2, add);
+            console.log('Addition:', additionResult);
+            const multiplicationResult = operation(num1, num2, multiply);
+            console.log('Multiplication:', multiplicationResult);
+        }
+        calculate(5, 10);   
+        calculate(3, 4);  
+        calculate(7, 2);   
+        calculate(12, 3); 
+    </script>
+</body>
+</html>

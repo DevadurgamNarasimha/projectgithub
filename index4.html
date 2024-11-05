@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Slideshow</title>
+    <style>
+     body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.slideshow-container {
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+#slideshow-image {
+    max-width: 100%;
+    border-radius: 10px;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.controls {
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.input-container {
+    margin-top: 20px;
+}   
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Slideshow</h1>
+        <div class="slideshow-container">
+            <img id="slideshow-image" src="" alt="Movie Image">
+        </div>
+        <div class="controls">
+            <button id="prev">Previous</button>
+            <button id="play">Play</button>
+            <button id="pause">Pause</button>
+            <button id="next">Next</button>
+        </div>
+        <div class="input-container">
+            <input type="text" id="image-url" placeholder="Enter image URL">
+            <input type="number" id="image-index" placeholder="Position (0-based)">
+            <button id="add-image">Add Image</button>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+const images = [
+ "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMFUjVQL19dmYX1hx83xiiQMVsLe_ixxvdcw&s",
+ "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9_1nxozkoYRf462l-m0po6KNGcewFdwJU_w&s",
+ "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHnWaSc1MwpaaWOyERmiNNy_nqSn88hTLrIg&s",
+];
+
+let currentIndex = 0;
+let intervalId;
+const slideshowImage = document.getElementById('slideshow-image');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const playButton = document.getElementById('play');
+const pauseButton = document.getElementById('pause');
+const addImageButton = document.getElementById('add-image');
+const imageUrlInput = document.getElementById('image-url');
+const imageIndexInput = document.getElementById('image-index');
+
+function updateSlideshow() {
+    slideshowImage.src = images[currentIndex];
+    slideshowImage.style.opacity = 0;
+    setTimeout(() => {
+        slideshowImage.style.opacity = 1;
+    }, 50);
+}
+function showNextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    updateSlideshow();
+}
+function showPrevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    updateSlideshow();
+}
+function startSlideshow() {
+    intervalId = setInterval(showNextImage, 2000);
+}
+function stopSlideshow() {
+    clearInterval(intervalId);
+    intervalId = null;
+}
+playButton.addEventListener('click', startSlideshow);
+pauseButton.addEventListener('click', stopSlideshow);
+nextButton.addEventListener('click', showNextImage);
+prevButton.addEventListener('click', showPrevImage);
+
+addImageButton.addEventListener('click', () => {
+    const imageUrl = imageUrlInput.value;
+    const imageIndex = parseInt(imageIndexInput.value, 10);
+
+    if (imageUrl && !isNaN(imageIndex)) {
+        if (imageIndex >= 0 && imageIndex <= images.length) {
+            images.splice(imageIndex, 0, imageUrl);
+            imageUrlInput.value = '';
+            imageIndexInput.value = '';
+            updateSlideshow();
+        }
+         else {
+            alert('Position is out of bounds.');
+        }
+    } 
+    else {
+        alert('Please enter a valid image URL and position.');
+    }
+});
+updateSlideshow();
+</script>
