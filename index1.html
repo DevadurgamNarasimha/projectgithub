@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Cart Application</title>
+    <style>
+     body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button.delete {
+    background-color: #dc3545;
+}   
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" id="home">Home</a>
+        <a href="#" id="cart">Cart</a>
+    </nav>
+
+    <div id="main-content">
+        <h1>User List</h1>
+        <div id="user-cards" class="card-container"></div>
+    </div>
+
+    <div id="cart-content" class="card-container" style="display:none;">
+        <h1>Cart</h1>
+        <div id="cart-items"></div>
+    </div>
+</body>
+</html>
+<script>
+const users = [
+    { id: 1, name: "Leanne Graham", email: "Sincere@april.biz" },
+    { id: 2, name: "Ervin Howell", email: "Shanna@melissa.tv" },
+    { id: 3, name: "Clementine Bauch", email: "Nathan@yesenia.net" },
+    { id: 4, name: "Patricia Lebsack", email: "Julianne.OConner@kory.org" },
+    { id: 5, name: "Chelsey Dietrich", email: "Lucio_Hettinger@annie.ca" },
+    { id: 6, name: "Mrs. Dennis Schulist", email: "Karley_Dach@jasper.info" },
+    { id: 7, name: "Kurtis Weissnat", email: "Telly.Hoeger@billy.biz" },
+    { id: 8, name: "Nicholas Runolfsdottir V", email: "Sherwood@rosamond.me" },
+    { id: 9, name: "Glenna Reichert", email: "Chaim_McDermott@dana.io" },
+    { id: 10, name: "Clementina DuBuque", email: "Rey.Padberg@karina.biz" },
+];
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderUsers();
+    renderCart();
+    setupNavigation();
+});
+
+function renderUsers() {
+    const userCards = document.getElementById('user-cards');
+    userCards.innerHTML = '';
+    users.forEach(user => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h3>${user.name}</h3>
+            <p>${user.email}</p>
+            <button onclick="addToCart(${user.id})">Add to Cart</button>
+        `;
+        userCards.appendChild(card);
+    });
+}
+
+function renderCart() {
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    cart.forEach(user => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h3>${user.name}</h3>
+            <p>${user.email}</p>
+            <button class="delete" onclick="removeFromCart(${user.id})">Delete</button>
+        `;
+        cartItems.appendChild(card);
+    });
+}
+
+function addToCart(id) {
+    const user = users.find(u => u.id === id);
+    if (!cart.some(u => u.id === user.id)) {
+        cart.push(user);
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+}
+
+function removeFromCart(id) {
+    cart = cart.filter(user => user.id !== id);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+}
+
+function setupNavigation() {
+    const homeLink = document.getElementById('home');
+    const cartLink = document.getElementById('cart');
+    const mainContent = document.getElementById('main-content');
+    const cartContent = document.getElementById('cart-content');
+
+    homeLink.addEventListener('click', () => {
+        mainContent.style.display = 'block';
+        cartContent.style.display = 'none';
+        renderUsers();
+    });
+
+    cartLink.addEventListener('click', () => {
+        mainContent.style.display = 'none';
+        cartContent.style.display = 'block';
+        renderCart();
+    });
+}
+</script>

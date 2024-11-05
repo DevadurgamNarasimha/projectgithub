@@ -5,7 +5,7 @@ function forEachCustom(array, callback) {
 }
 
 // Example usage:
-const numbers = [1, 2, 3, 4, 5];
-forEachCustom(numbers, (element, index) => {
-    console.log(Element at index ${index}: ${element});
+const num = [1, 2, 3, 4, 5];
+forEachCustom(num, (element, index) => {
+    console.log(element , index);
 });

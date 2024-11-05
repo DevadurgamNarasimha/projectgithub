@@ -1,6 +1,8 @@
 // questtion-1: 
 const numbers1 = [2, 3, 4, 5];
-const squares = numbers1.map(num => num * num);
+const squares = numbers1.map(num => num * num
+
+);
 console.log('Squares:', squares); 
 
 // questtion-2: 
