@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infinite Scrolling</title>
+    <style>
+       body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-item {
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: calc(33% - 20px); 
+            box-sizing: border-box;
+        }
+
+        .image-item img {
+            width: 100%; 
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="gallery">Gallery</div>
+    <script>
+        const apiUrl = 'https://jsonplaceholder.typicode.com/photos';
+        const gallery = document.getElementById('gallery');
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let loading = false;
+        async function fetchPhotos(page) {
+            try {
+                loading = true;
+                const response = await fetch(`${apiUrl}?_page=${page}&_limit=${itemsPerPage}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const photos = await response.json();
+                displayPhotos(photos);
+            } catch (error) {
+                console.error('Error fetching photos:', error);
+            } finally {
+                loading = false;
+            }
+        }
+        function displayPhotos(photos) {
+            photos.forEach(photo => {
+                const imgDiv = document.createElement('div');
+                imgDiv.classList.add('image-item');
+                imgDiv.innerHTML = `<img src="${photo.thumbnailUrl}" alt="${photo.title}" />`;
+                gallery.appendChild(imgDiv);
+            });
+        }
+        function handleScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !loading) {
+                currentPage++;
+                fetchPhotos(currentPage);
+            }
+        }
+        fetchPhotos(currentPage);
+        window.addEventListener('scroll', handleScroll);
+    </script>
+</body>
+</html>
